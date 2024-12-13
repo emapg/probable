@@ -4,7 +4,8 @@ import { Message } from '@/types/chat';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus, github } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs'; // Importing from hljs
 import { format } from 'date-fns';
 import { Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,7 @@ interface MessageProps {
 export function ChatMessage({ message }: MessageProps) {
   const [copied, setCopied] = useState(false);
   const settings = useSettingsStore((state) => state.settings);
-  const isUser = message.role === 'user';
+  const isUser  = message.role === 'user';
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -32,7 +33,7 @@ export function ChatMessage({ message }: MessageProps) {
     <div
       className={cn(
         'flex w-full gap-4 rounded-lg p-4 transition-colors',
-        isUser ? 'bg-muted/50' : 'bg-background',
+        isUser  ? 'bg-muted/50' : 'bg-background',
         message.pending && 'opacity-70',
         message.error && 'bg-destructive/10'
       )}
@@ -40,7 +41,7 @@ export function ChatMessage({ message }: MessageProps) {
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">
-            {isUser ? 'You' : 'Assistant'}
+            {isUser  ? 'You' : 'Assistant'}
           </span>
           {settings.showTimestamps && (
             <span className="text-xs text-muted-foreground">
@@ -91,7 +92,7 @@ export function ChatMessage({ message }: MessageProps) {
                 },
               }}
             >
-              {message.content}
+ {message.content}
             </ReactMarkdown>
           ) : (
             <p>{message.content}</p>
