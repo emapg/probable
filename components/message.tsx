@@ -14,8 +14,16 @@ interface MessageProps {
   message: MessageType;
 }
 
+// Define a custom type for the code component props
+interface CodeProps {
+  node: any; // You can replace 'any' with a more specific type if needed
+  inline: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
 export function Message({ message }: MessageProps) {
-  const isUser = message.role === 'user';
+  const isUser  = message.role === 'user';
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -26,13 +34,13 @@ export function Message({ message }: MessageProps) {
     <div
       className={cn(
         'flex w-full gap-4 rounded-lg p-4',
-        isUser ? 'bg-muted/50' : 'bg-background'
+        isUser  ? 'bg-muted/50' : 'bg-background'
       )}
     >
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">
-            {isUser ? 'You' : 'Assistant'}
+            {isUser  ? 'You' : 'Assistant'}
           </span>
           <span className="text-xs text-muted-foreground">
             {format(message.timestamp, 'h:mm a')}
@@ -41,7 +49,7 @@ export function Message({ message }: MessageProps) {
         <div className="prose prose-sm dark:prose-invert max-w-none">
           <ReactMarkdown
             components={{
-              code({ node, inline, className, children, ...props }) {
+              code({ node, inline, className, children, ...props }: CodeProps) {
                 const match = /language-(\w+)/.exec(className || '');
                 return !inline && match ? (
                   <div className="relative">
