@@ -47,12 +47,11 @@ export function Message({ message }: MessageProps) {
                 className,
                 children,
                 ...props
-              }: React.DetailedHTMLProps<
-                React.HTMLAttributes<HTMLElement>,
-                HTMLElement
-              > & {
-                inline?: boolean;
+              }: {
                 node: any;
+                inline?: boolean;
+                className?: string;
+                children?: React.ReactNode;
               }) {
                 const match = /language-(\w+)/.exec(className || '');
                 return !inline && match ? (
