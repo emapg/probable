@@ -14,7 +14,10 @@ export interface Chat {
 }
 
 export interface UserSettings {
+  apiKey?: string; // Optional property
   theme: 'light' | 'dark' | 'system';
   fontSize: 'small' | 'medium' | 'large';
-  codeTheme: 'dark' | 'light';
+  enterToSend: boolean;
+  showTimestamps: boolean;
+  enableMarkdown: boolean;
 }
