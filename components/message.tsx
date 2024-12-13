@@ -2,7 +2,7 @@
 
 import { Message as MessageType } from '@/types/chat';
 import { cn } from '@/lib/utils';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { Components } from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { format } from 'date-fns';
@@ -14,20 +14,42 @@ interface MessageProps {
   message: MessageType;
 }
 
-// Define a custom type for the code component props
-interface CodeProps {
-  node: any; // You can replace 'any' with a more specific type if needed
-  inline: boolean;
-  className?: string;
-  children: React.ReactNode;
-}
-
 export function Message({ message }: MessageProps) {
   const isUser  = message.role === 'user';
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard');
+  };
+
+  const components: Components = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || '');
+      return !inline && match ? (
+        <div className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2"
+            onClick={() => copyToClipboard(String(children))}
+          >
+            <Copy className="h-4 w-4" />
+          </Button>
+          <SyntaxHighlighter
+            {...props}
+            style={vscDarkPlus}
+            language={match[1]}
+            PreTag="div"
+          >
+            {String(children).replace(/\n$/, '')}
+          </SyntaxHighlighter>
+        </div>
+      ) : (
+        <code {...props} className={className}>
+          {children}
+        </code>
+      );
+    },
   };
 
   return (
@@ -47,37 +69,7 @@ export function Message({ message }: MessageProps) {
           </span>
         </div>
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          <ReactMarkdown
-            components={{
-              code({ node, inline, className, children, ...props }: CodeProps) {
-                const match = /language-(\w+)/.exec(className || '');
-                return !inline && match ? (
-                  <div className="relative">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-2 top-2"
-                      onClick={() => copyToClipboard(String(children))}
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <SyntaxHighlighter
-                      {...props}
-                      style={vscDarkPlus}
-                      language={match[1]}
-                      PreTag="div"
-                    >
-                      {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
-                  </div>
-                ) : (
-                  <code {...props} className={className}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
+          <ReactMarkdown components={components}>
             {message.content}
           </ReactMarkdown>
         </div>
