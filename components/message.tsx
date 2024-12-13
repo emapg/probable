@@ -41,7 +41,19 @@ export function Message({ message }: MessageProps) {
         <div className="prose prose-sm dark:prose-invert max-w-none">
           <ReactMarkdown
             components={{
-              code({ node, inline, className, children, ...props }) {
+              code({
+                node,
+                inline,
+                className,
+                children,
+                ...props
+              }: React.DetailedHTMLProps<
+                React.HTMLAttributes<HTMLElement>,
+                HTMLElement
+              > & {
+                inline?: boolean;
+                node: any;
+              }) {
                 const match = /language-(\w+)/.exec(className || '');
                 return !inline && match ? (
                   <div className="relative">
