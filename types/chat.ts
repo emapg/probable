@@ -1,4 +1,5 @@
 export interface Message {
+  id: string; // Unique identifier for the message
   role: 'user' | 'assistant'; // Define roles
   content: string; // The message content
   timestamp: Date; // The timestamp of the message
