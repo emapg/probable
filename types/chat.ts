@@ -1,10 +1,10 @@
 export interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: number;
+  role: 'user' | 'assistant'; // Define roles
+  content: string; // The message content
+  timestamp: Date; // The timestamp of the message
+  pending?: boolean; // Optional property to indicate if the message is pending
+  error?: boolean; // Optional property to indicate if there was an error
 }
-
 export interface Chat {
   id: string;
   title: string;
